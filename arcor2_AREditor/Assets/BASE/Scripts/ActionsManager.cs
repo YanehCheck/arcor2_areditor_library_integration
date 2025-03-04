@@ -194,7 +194,7 @@ namespace Base {
                         }
                         actionObj.ActionsLoaded = true;
                     }
-                } catch (RequestFailedException e) {
+                } catch (Arcor2ConnectionException e) {
                     Debug.LogError("Failed to load action for object " + actionObject.Type);
                     Notifications.Instance.ShowNotification("Failed to load actions", "Failed to load action for object " + actionObject.Type);
                     Notifications.Instance.SaveLogs();

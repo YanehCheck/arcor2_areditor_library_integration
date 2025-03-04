@@ -143,7 +143,7 @@ public class LeftMenuPackage : LeftMenu {
             if (!response.Result) {
                 Notifications.Instance.ShowNotification("Failed to step", string.Join(',', response.Messages));
             }
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to step", ex.Message);
         }
     } 

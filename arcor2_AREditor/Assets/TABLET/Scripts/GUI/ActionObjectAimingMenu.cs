@@ -202,7 +202,7 @@ public class ActionObjectAimingMenu : RightMenu<ActionObjectAimingMenu> {
                         PreviousButton.SetInteractivity(true);
                         PreviousPoint();
                     }
-                } catch (RequestFailedException ex) {
+                } catch (Arcor2ConnectionException ex) {
                     StartObjectFocusingButton.SetInteractivity(true);
                     FocusObjectDoneButton.SetInteractivity(false, "No aiming in progress");
                     NextButton.SetInteractivity(false, "No aiming in progress");
@@ -240,7 +240,7 @@ public class ActionObjectAimingMenu : RightMenu<ActionObjectAimingMenu> {
         try {
             await CommunicationManager.Instance.Client.ObjectAimingDoneAsync(true);
             FocusObjectDoneButton.SetInteractivity(true);
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             FocusObjectDoneButton.SetInteractivity(false, ex.Message);
         }
     }
@@ -266,7 +266,7 @@ public class ActionObjectAimingMenu : RightMenu<ActionObjectAimingMenu> {
         try {
             await CommunicationManager.Instance.Client.UpdateObjectPoseUsingRobotAsync(new UpdateObjectPoseUsingRobotRequestArgs(currentObject.Data.Id,
                     new RobotArg(SceneManager.Instance.SelectedRobot.GetId(), SceneManager.Instance.SelectedEndEffector.GetName(), armId), pivot));
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to update object position", ex.Message);
         }
 
@@ -282,7 +282,7 @@ public class ActionObjectAimingMenu : RightMenu<ActionObjectAimingMenu> {
                 spheres[currentFocusPoint].UnHighlight();
             UpdateCurrentPointLabel();
             await UpdateMenu();
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to cancel aiming", ex.Message);
         }
     }
@@ -337,7 +337,7 @@ public class ActionObjectAimingMenu : RightMenu<ActionObjectAimingMenu> {
             foreach (AimingPointSphere sphere in spheres) {
                 sphere.SetAimed(false);
             }
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             NotificationsModernUI.Instance.ShowNotification("Failed to start object focusing", ex.Message);
             CurrentPointLabel.text = "";
             currentFocusPoint = -1;
@@ -357,7 +357,7 @@ public class ActionObjectAimingMenu : RightMenu<ActionObjectAimingMenu> {
             await CommunicationManager.Instance.Client.ObjectAimingAddPointAsync(new ObjectAimingAddPointRequestArgs(currentFocusPoint));
             spheres[currentFocusPoint].SetAimed(true);
             await CheckDoneBtn();
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             NotificationsModernUI.Instance.ShowNotification("Failed to save current position", ex.Message);
         }
 
@@ -381,7 +381,7 @@ public class ActionObjectAimingMenu : RightMenu<ActionObjectAimingMenu> {
             if (currentObject is ActionObject3D actionObject3D)
                 actionObject3D.Highlight();
             AimingInProgress = false;
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             NotificationsModernUI.Instance.ShowNotification("Failed to focus object", ex.Message);
         }
     }
@@ -435,7 +435,7 @@ public class ActionObjectAimingMenu : RightMenu<ActionObjectAimingMenu> {
         if (model == null)
             return;
         if (!SceneManager.Instance.IsRobotAndEESelected()) {
-            throw new RequestFailedException("Robot or end effector not selected!");
+            throw new Arcor2ConnectionException("Robot or end effector not selected!");
         }
 
         try {
@@ -490,7 +490,7 @@ public class ActionObjectAimingMenu : RightMenu<ActionObjectAimingMenu> {
                 Notifications.Instance.ShowNotification("Failed to calibrate camera", string.Join(',', response.Messages));
                 ConfirmationDialog.Close();
             }
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             GameManager.Instance.HideLoadingScreen();
             Notifications.Instance.ShowNotification("Failed to calibrate camera", ex.Message);
             ConfirmationDialog.Close();

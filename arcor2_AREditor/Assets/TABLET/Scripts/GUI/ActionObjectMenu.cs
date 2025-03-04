@@ -105,7 +105,7 @@ public class ActionObjectMenu : RightMenu<ActionObjectMenu> {
         try {
             await CommunicationManager.Instance.Client.RenameActionObjectAsync(new RenameArgs(CurrentObject.Data.Id, newName));
             InputDialog.Close();
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             Notifications.Instance.ShowNotification("Failed to rename object", e.Message);
         }
     }
@@ -222,7 +222,7 @@ public class ActionObjectMenu : RightMenu<ActionObjectMenu> {
                 Notifications.Instance.ShowToastMessage("Parameters saved");
                 parametersChanged = false;
                 UpdateSaveBtn();
-            } catch (RequestFailedException e) {
+            } catch (Arcor2ConnectionException e) {
                 Notifications.Instance.ShowNotification("Failed to update object parameters ", e.Message);
             }
         }

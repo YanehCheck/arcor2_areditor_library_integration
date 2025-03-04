@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
 using UnityEngine;
@@ -41,7 +42,7 @@ public class PackageOptionMenu : TileOptionMenu {
             CommunicationManager.Instance.Client.ListPackagesAsync().ContinueWith(task => MainScreen.Instance.LoadPackages(task.Result), TaskScheduler.FromCurrentSynchronizationContext());
             confirmationDialog.Close();
             Close();
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             Notifications.Instance.ShowNotification("Failed to remove package", e.Message);
         } finally {
             GameManager.Instance.HideLoadingScreen();
@@ -79,7 +80,7 @@ public class PackageOptionMenu : TileOptionMenu {
                 return (false, response.Messages.FirstOrDefault());
             }
             return (true, "");
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             return (false, e.Message);
         }
     }
@@ -96,7 +97,7 @@ public class PackageOptionMenu : TileOptionMenu {
             packageTile.SetLabel(newUserId);
             SetLabel(newUserId);
             Close();
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             Notifications.Instance.ShowNotification("Failed to rename package", e.Message);
         } finally {
             GameManager.Instance.HideLoadingScreen();

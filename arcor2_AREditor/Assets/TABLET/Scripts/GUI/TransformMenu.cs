@@ -672,7 +672,7 @@ public class TransformMenu : RightMenu<TransformMenu> {
                         }
                     }
                 }
-            } catch (RequestFailedException e) {
+            } catch (Arcor2ConnectionException e) {
                 Notifications.Instance.ShowNotification("Failed to update action point position", e.Message);
             }
         } else if (InteractiveObject is ActionObject actionObject) {
@@ -703,7 +703,7 @@ public class TransformMenu : RightMenu<TransformMenu> {
                         }
                     }
 
-                } catch (RequestFailedException e) {
+                } catch (Arcor2ConnectionException e) {
                     Notifications.Instance.ShowNotification("Failed to update size of collision object", e.Message);
                 }
             }
@@ -728,7 +728,7 @@ public class TransformMenu : RightMenu<TransformMenu> {
                             }
                         }
                     }
-            } catch (RequestFailedException e) {
+            } catch (Arcor2ConnectionException e) {
                 Notifications.Instance.ShowNotification("Failed to update action object position", e.Message);
             }
 

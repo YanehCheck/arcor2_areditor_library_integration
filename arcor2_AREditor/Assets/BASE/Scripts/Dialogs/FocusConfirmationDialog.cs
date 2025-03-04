@@ -1,3 +1,4 @@
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
 using Michsky.UI.ModernUIPack;
@@ -49,7 +50,7 @@ public class FocusConfirmationDialog : MonoBehaviour
             }
 
             GetComponent<ModalWindowManager>().CloseWindow();
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             NotificationsModernUI.Instance.ShowNotification("Failed to update", ex.Message);
         }
     }

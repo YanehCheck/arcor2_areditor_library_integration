@@ -62,7 +62,7 @@ public class EditorScreen : MonoBehaviour {
             if (!response.Result) {
                 Notifications.Instance.ShowNotification("Going online failed", string.Join(",", response.Messages));
             }
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             Notifications.Instance.ShowNotification("Going online failed", e.Message);
         }
     }

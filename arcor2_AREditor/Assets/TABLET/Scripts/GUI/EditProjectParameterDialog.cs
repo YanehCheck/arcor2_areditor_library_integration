@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
 using Michsky.UI.ModernUIPack;
@@ -85,7 +86,7 @@ public class EditProjectParameterDialog : Dialog {
                     valueInput.SetValue(value);
                 }
 
-            } catch (RequestFailedException e) {
+            } catch (Arcor2ConnectionException e) {
                 Notifications.Instance.ShowNotification("Failed to lock " + projectParameter.Name, e.Message);
                 this.projectParameter = null;
                 return false;
@@ -156,7 +157,7 @@ public class EditProjectParameterDialog : Dialog {
         try {
             await Confirm(true);
             ConfirmButton.SetInteractivity(true);
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             ConfirmButton.SetInteractivity(false, e.Message);
         }
     }
@@ -192,7 +193,7 @@ public class EditProjectParameterDialog : Dialog {
             //after updating, constant is unlocked automatically by server
             if (!dryRun)
                 Close();
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             if (dryRun)
                 throw e;
             else
@@ -222,7 +223,7 @@ public class EditProjectParameterDialog : Dialog {
             if (!response.Result) {
                 Notifications.Instance.ShowNotification("Failed to unlock " + projectParameter.Name, string.Join(",", response.Messages));
             }
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             Notifications.Instance.ShowNotification("Failed to unlock " + projectParameter.Name, e.Message);
         }
         Close();
@@ -237,7 +238,7 @@ public class EditProjectParameterDialog : Dialog {
                 return;
             }
             Close();
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             Notifications.Instance.ShowNotification("Failed to remove project parameter", e.Message);
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
 using UnityEngine;
@@ -82,7 +83,7 @@ public class APOrientation : InteractiveObject, ISubItem {
         try {
             await CommunicationManager.Instance.Client.RemoveActionPointOrientationAsync(new RemoveActionPointOrientationRequestArgs(OrientationId), true);
             return new RequestResult(true);
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             return new RequestResult(false, ex.Message);
         }
     }
@@ -90,7 +91,7 @@ public class APOrientation : InteractiveObject, ISubItem {
     public async override void Remove() {
         try {
             await CommunicationManager.Instance.Client.RemoveActionPointOrientationAsync(new RemoveActionPointOrientationRequestArgs(OrientationId), false);
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to remove orientation", ex.Message);
         }
     }
@@ -99,7 +100,7 @@ public class APOrientation : InteractiveObject, ISubItem {
         try {
              await CommunicationManager.Instance.Client.RenameActionPointOrientationAsync(new RenameActionPointOrientationRequestArgs(GetId(), name));
             Notifications.Instance.ShowToastMessage("Orientation renamed");
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             Notifications.Instance.ShowNotification("Failed to rename orientation", e.Message);
             throw;
         }

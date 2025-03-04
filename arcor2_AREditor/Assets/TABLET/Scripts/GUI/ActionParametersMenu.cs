@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
 using Newtonsoft.Json;
@@ -95,7 +96,7 @@ public class ActionParametersMenu : RightMenu<ActionParametersMenu> {
                     return;
                 }
                 Notifications.Instance.ShowToastMessage("Parameters saved");
-            } catch (RequestFailedException e) {
+            } catch (Arcor2ConnectionException e) {
                 Notifications.Instance.ShowNotification("Failed to save parameters", e.Message);
             }
         }

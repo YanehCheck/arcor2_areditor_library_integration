@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
 
@@ -33,7 +34,7 @@ public class CalibrateRobotDialog : Dialog {
                     Notifications.Instance.ShowNotification("Failed to calibrate robot",
                             string.Join(',', response.Messages));
                 }
-            } catch (RequestFailedException ex) {
+            } catch (Arcor2ConnectionException ex) {
                 GameManager.Instance.HideLoadingScreen();
                 Notifications.Instance.ShowNotification("Failed to calibrate robot", ex.Message);
             } finally {

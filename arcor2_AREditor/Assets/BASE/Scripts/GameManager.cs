@@ -864,7 +864,7 @@ namespace Base {
                     try {
                         systemInfo = (await CommunicationManager.Instance.Client.GetSystemInfoAsync()).Data;
                         await CommunicationManager.Instance.Client.RegisterUserAsync(new RegisterUserRequestArgs(LandingScreen.Instance.Username.text));
-                    } catch (RequestFailedException ex) {
+                    } catch (Arcor2ConnectionException ex) {
                         DisconnectFromSever();
                         Notifications.Instance.ShowNotification("Connection failed", ex.Message);
                         return;
@@ -990,7 +990,7 @@ namespace Base {
                     return;
                 }
                 ActionsManager.Instance.UpdateObjects(result.Data);
-            } catch (RequestFailedException ex) {
+            } catch (Arcor2ConnectionException ex) {
                 Debug.LogError(ex);
                 Notifications.Instance.SaveLogs("Failed to update action objects");
                 Instance.DisconnectFromSever();
@@ -1278,7 +1278,7 @@ namespace Base {
                 if (name == scene.Name)
                     return scene.Id;
             }
-            throw new RequestFailedException("No scene with name: " + name);
+            throw new Arcor2ConnectionException("No scene with name: " + name);
         }
 
         /// <summary>
@@ -1291,7 +1291,7 @@ namespace Base {
                 if (name == project.Name)
                     return project.Id;
             }
-            throw new RequestFailedException("No project with name: " + name);
+            throw new Arcor2ConnectionException("No project with name: " + name);
         }
 
         public void InvokeScenesListChanged() {
@@ -1356,7 +1356,7 @@ namespace Base {
             try {
                 await CommunicationManager.Instance.Client.OpenProjectAsync(new IdArgs(id));
                 await Task.Run(() => WaitForProjectReady(5000));
-            } catch (RequestFailedException ex) {
+            } catch (Arcor2ConnectionException ex) {
                 Notifications.Instance.ShowNotification("Failed to open project", ex.Message);
                 HideLoadingScreen();
             } catch (TimeoutException e) {
@@ -1373,7 +1373,7 @@ namespace Base {
             ShowLoadingScreen();
             try {
                 await CommunicationManager.Instance.Client.OpenSceneAsync(new IdArgs(id));
-            } catch (RequestFailedException e) {
+            } catch (Arcor2ConnectionException e) {
                 Notifications.Instance.ShowNotification("Open scene failed", e.Message);
                 HideLoadingScreen();
                 return;
@@ -1397,7 +1397,7 @@ namespace Base {
             try {
                 await CommunicationManager.Instance.Client.RunPackageAsync(new RunPackageRequestArgs(packageId));
                 return true;
-            } catch (RequestFailedException ex) {
+            } catch (Arcor2ConnectionException ex) {
                 Notifications.Instance.ShowNotification("Failed to run project", ex.Message);
                 HideLoadingScreen();
                 return false;
@@ -1415,16 +1415,16 @@ namespace Base {
             if (ProjectManager.Instance.ProjectChanged) {
                 Notifications.Instance.ShowNotification("Unsaved changes", "There are some unsaved changes in project. Save it before build the package.");
                 HideLoadingScreen();
-                throw new RequestFailedException("Unsaved changes");
+                throw new Arcor2ConnectionException("Unsaved changes");
             }
             try {
                 var response = await CommunicationManager.Instance.Client.BuildProjectAsync(new BuildProjectRequestArgs(ProjectManager.Instance.ProjectMeta!.Id, name));
                 if (!response.Result) {
                     Notifications.Instance.ShowNotification("Failed to build package", string.Join(',', response.Messages));
-                    throw new RequestFailedException();
+                    throw new Arcor2ConnectionException();
                 }
                 return response.Data.PackageId;
-            } catch (RequestFailedException ex) {
+            } catch (Arcor2ConnectionException ex) {
                 Notifications.Instance.ShowNotification("Failed to build package", ex.Message);
                 throw;
             } finally {
@@ -1448,7 +1448,7 @@ namespace Base {
                 }
 
                 return true;
-            } catch (RequestFailedException ex) {
+            } catch (Arcor2ConnectionException ex) {
                 Notifications.Instance.ShowNotification("Failed to pause project", ex.Message);
                 HideLoadingScreen();
                 return false;
@@ -1470,7 +1470,7 @@ namespace Base {
                 }
 
                 return true;
-            } catch (RequestFailedException ex) {
+            } catch (Arcor2ConnectionException ex) {
                 Notifications.Instance.ShowNotification("Failed to resume project", ex.Message);
                 HideLoadingScreen();
                 return false;
@@ -1492,7 +1492,7 @@ namespace Base {
                 }
 
                 return true;
-            } catch (RequestFailedException ex) {
+            } catch (Arcor2ConnectionException ex) {
                 Notifications.Instance.ShowNotification("Failed to create new object type", ex.Message);
                 return false;
             } finally {
@@ -1513,7 +1513,7 @@ namespace Base {
                     Notifications.Instance.ShowNotification("Failed to update action point", string.Join(',', response.Messages));
                 }
 
-            } catch (RequestFailedException ex) {
+            } catch (Arcor2ConnectionException ex) {
                 Notifications.Instance.ShowNotification("Failed to update action point", ex.Message);
             }
         }
@@ -1538,7 +1538,7 @@ namespace Base {
                     HideLoadingScreen();
                 }
 
-            } catch (RequestFailedException e) {
+            } catch (Arcor2ConnectionException e) {
                 Notifications.Instance.ShowNotification("Failed to create project", e.Message);
                 HideLoadingScreen();
             } finally {
@@ -1564,7 +1564,7 @@ namespace Base {
                     Notifications.Instance.ShowNotification("Failed to create new scene", string.Join(',', response.Messages));
                     HideLoadingScreen();
                 }
-            } catch (RequestFailedException e) {
+            } catch (Arcor2ConnectionException e) {
                 Notifications.Instance.ShowNotification("Failed to create new scene", e.Message);
                 HideLoadingScreen();
             }
@@ -1587,7 +1587,7 @@ namespace Base {
                     return (false, string.Join(',', response.Messages));
                 }
                 return (true, "");
-            } catch (RequestFailedException ex) {
+            } catch (Arcor2ConnectionException ex) {
                 if (!dryRun && force) {
                     Notifications.Instance.ShowNotification("Failed to close scene", ex.Message);
                     HideLoadingScreen();                   
@@ -1614,7 +1614,7 @@ namespace Base {
                     return (false, string.Join(',', response.Messages));
                 }
                 return (true, "");
-            } catch (RequestFailedException ex) {
+            } catch (Arcor2ConnectionException ex) {
                 if (!dryRun && force) {
                     Notifications.Instance.ShowNotification("Failed to close project", ex.Message);
                     HideLoadingScreen();
@@ -1635,7 +1635,7 @@ namespace Base {
                     Notifications.Instance.ShowNotification("Failed to cancel action", string.Join(',', response.Messages));
                     return false;
                 }
-            } catch (RequestFailedException ex) {
+            } catch (Arcor2ConnectionException ex) {
                 Notifications.Instance.ShowNotification("Failed to cancel action", ex.Message);
                 return false;
             }
@@ -1906,7 +1906,7 @@ namespace Base {
                 }
 
                 return true;
-            } catch (RequestFailedException e) {
+            } catch (Arcor2ConnectionException e) {
                 Notifications.Instance.ShowNotification("Failed to add action point", e.Message);
                 return false;
             }
@@ -1927,7 +1927,7 @@ namespace Base {
                 }
 
                 return true;
-            } catch (RequestFailedException e) {
+            } catch (Arcor2ConnectionException e) {
                 Notifications.Instance.ShowNotification("Failed to update action point parent", e.Message);
                 return false;
             }

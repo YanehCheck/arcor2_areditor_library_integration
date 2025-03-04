@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication;
 using Base;
 using UnityEngine;
 using static Base.GameManager;
@@ -354,7 +355,7 @@ public class SelectorMenu : Singleton<SelectorMenu> {
                 selectorItem.transform.SetParent(parent.SelectorItem.SublistContent.transform);
                 parent.SelectorItem.AddChild(selectorItem);
             } else {
-                throw new RequestFailedException("Trying to create subitem without parent item in list. This should not had happened, please report");
+                throw new Arcor2ConnectionException("Trying to create subitem without parent item in list. This should not had happened, please report");
             }
         } else {
             selectorItem.transform.SetParent(ContentAlphabet.transform);

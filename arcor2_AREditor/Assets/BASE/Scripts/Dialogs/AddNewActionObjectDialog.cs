@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
 using Newtonsoft.Json;
@@ -86,7 +87,7 @@ public class AddNewActionObjectDialog : Dialog {
                 await CommunicationManager.Instance.Client.AddActionObjectToSceneAsync(new AddObjectToSceneRequestArgs(newActionObjectName, actionObjectMetadata.Type, pose, parameters));
                 callback?.Invoke();
                 Close();
-            } catch (RequestFailedException e) {
+            } catch (Arcor2ConnectionException e) {
                 Notifications.Instance.ShowNotification("Failed to add action", e.Message);
             }
         }

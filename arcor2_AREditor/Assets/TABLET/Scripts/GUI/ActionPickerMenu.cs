@@ -234,12 +234,12 @@ public class ActionPickerMenu : RightMenu<ActionPickerMenu> {
                         }
                     }
 
-                } catch (RequestFailedException e) {
+                } catch (Arcor2ConnectionException e) {
                     Notifications.Instance.ShowNotification("Failed to add action", e.Message);
                     addedActionName = null;
                 }
             }
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             Notifications.Instance.ShowNotification("Failed to add action", e.Message);
         }
     }

@@ -1,3 +1,4 @@
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
 using Michsky.UI.ModernUIPack;
@@ -87,7 +88,7 @@ public class AddOrientationMenu : MonoBehaviour {
             Notifications.Instance.ShowToastMessage("Orientation added successfully");
         } catch (ItemNotFoundException ex) {
             Notifications.Instance.ShowNotification("Failed to add new orientation", ex.Message);
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to add new orientation", ex.Message);
         }
     }

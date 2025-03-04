@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using UnityEngine;
 using Pose = Arcor2.ClientSdk.Communication.OpenApi.Models.Pose;
@@ -256,7 +257,7 @@ namespace Base {
             try {
                 await CommunicationManager.Instance.Client.RenameActionObjectAsync(new RenameArgs(GetId(), name));
                 Notifications.Instance.ShowToastMessage("Action object renamed");
-            } catch (RequestFailedException e) {
+            } catch (Arcor2ConnectionException e) {
                 Notifications.Instance.ShowNotification("Failed to rename action object", e.Message);
                 throw;
             }

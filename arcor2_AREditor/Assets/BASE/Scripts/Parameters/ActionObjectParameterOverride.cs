@@ -1,3 +1,4 @@
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
 using TMPro;
@@ -69,7 +70,7 @@ public class ActionObjectParameterOverride : MonoBehaviour
             }
 
             RestoreBtn.gameObject.SetActive(false);
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Debug.LogError(ex);
         }
     }
@@ -111,7 +112,7 @@ public class ActionObjectParameterOverride : MonoBehaviour
             ModifyBtn.gameObject.SetActive(true);
             RestoreBtn.gameObject.SetActive(true);
             CancelBtn.gameObject.SetActive(false);
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Debug.LogError(ex);
             Notifications.Instance.ShowNotification("Failed to override parameter", ex.Message);
         }

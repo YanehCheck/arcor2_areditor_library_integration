@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
 using UnityEngine;
@@ -55,7 +56,7 @@ public class SceneOptionMenu : TileOptionMenu {
                 return (false, response.Messages.FirstOrDefault());
             }
             return (true, "");
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             return (false, e.Message);
         }
     }
@@ -72,7 +73,7 @@ public class SceneOptionMenu : TileOptionMenu {
             sceneTile.SetLabel(newUserId);
             SetLabel(newUserId);
             Close();
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             Notifications.Instance.ShowNotification("Failed to rename scene", e.Message);
         } finally {
             GameManager.Instance.HideLoadingScreen();
@@ -90,7 +91,7 @@ public class SceneOptionMenu : TileOptionMenu {
             }
 
             projects = response.Data.Count;
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             Debug.LogError(e);
             return;
         }
@@ -118,7 +119,7 @@ public class SceneOptionMenu : TileOptionMenu {
             }
             ConfirmationDialog.Close();
             Close();
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             Notifications.Instance.ShowNotification("Failed to remove scene", e.Message);
         } finally {
             GameManager.Instance.HideLoadingScreen();
@@ -158,7 +159,7 @@ public class SceneOptionMenu : TileOptionMenu {
             }
             Close();
             MainScreen.Instance.SwitchToScenes();
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to duplicate scene", ex.Message);
         } finally {
             GameManager.Instance.HideLoadingScreen();

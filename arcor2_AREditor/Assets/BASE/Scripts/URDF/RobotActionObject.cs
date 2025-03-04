@@ -118,7 +118,7 @@ namespace Base {
                     Notifications.Instance.ShowNotification("Failed to update action object pose", string.Join(",", response.Messages));
                     ResetPosition();
                 }
-            } catch (RequestFailedException e) {
+            } catch (Arcor2ConnectionException e) {
                 Notifications.Instance.ShowNotification("Failed to update action object pose", e.Message);
                 ResetPosition();
             }
@@ -507,7 +507,7 @@ namespace Base {
                 }
 
                 return true;
-            } catch (RequestFailedException ex) {
+            } catch (Arcor2ConnectionException ex) {
                 Debug.LogError(ex.Message);
                 Notifications.Instance.ShowNotification("Failed to load end effectors", ex.Message);
                 return false;
@@ -702,7 +702,7 @@ namespace Base {
                 if (modelLoading) {
                     return new List<Joint>();
                 } else {
-                    throw new RequestFailedException("Model not found for this robot.");
+                    throw new Arcor2ConnectionException("Model not found for this robot.");
                 }
             } else
                 return RobotModel.GetJoints();

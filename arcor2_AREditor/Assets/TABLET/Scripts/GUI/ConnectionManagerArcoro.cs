@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
 using UnityEngine;
@@ -129,7 +130,7 @@ public class ConnectionManagerArcoro : Singleton<ConnectionManagerArcoro> {
         try {
             // TODO: how to pass condition?
             return (await CommunicationManager.Instance.Client.AddLogicItemAsync(new AddLogicItemRequestArgs(output.Action.Data.Id, input.Action.Data.Id, condition), true)).Result;
-        } catch (RequestFailedException) {
+        } catch (Arcor2ConnectionException) {
             return false;
         }
     }

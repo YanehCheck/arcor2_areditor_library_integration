@@ -606,7 +606,7 @@ namespace Base {
                     GameManager.Instance.GetProjectId(freeName);
                     hasFreeName = false;
                     freeName = projectName + "_" + i++.ToString();
-                } catch (RequestFailedException) {
+                } catch (Arcor2ConnectionException) {
                     // there is no project called "freeName" -> that is our new name
                 }
 
@@ -995,7 +995,7 @@ namespace Base {
             try {
                 actionProvider = SceneManager.Instance.GetActionObject(providerName);
             } catch (KeyNotFoundException ex) {
-                throw new RequestFailedException("PROVIDER NOT FOUND EXCEPTION: " + providerName + " " + actionType);
+                throw new Arcor2ConnectionException("PROVIDER NOT FOUND EXCEPTION: " + providerName + " " + actionType);
             }
 
             try {
@@ -1175,7 +1175,7 @@ namespace Base {
                 //action.EnableInputOutput(MainSettingsMenu.Instance.ConnectionsSwitch.IsOn());
                 updateProject = true;
                 OnActionAddedToScene?.Invoke(this, new ActionEventArgs(action));
-            } catch (RequestFailedException ex) {
+            } catch (Arcor2ConnectionException ex) {
                 Debug.LogError(ex);
             }
         }

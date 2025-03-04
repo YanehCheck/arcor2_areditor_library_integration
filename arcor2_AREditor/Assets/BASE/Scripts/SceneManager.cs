@@ -648,7 +648,7 @@ namespace Base {
                     GameManager.Instance.GetSceneId(freeName);
                     hasFreeName = false;
                     freeName = sceneName + "_" + i++.ToString();
-                } catch (RequestFailedException) {
+                } catch (Arcor2ConnectionException) {
 
                 }
 

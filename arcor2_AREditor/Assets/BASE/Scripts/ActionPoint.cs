@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using UnityEngine;
 using WebSocketSharp;
@@ -408,7 +409,7 @@ namespace Base {
                     if (!Actions.TryGetValue(projectAction.Id, out Action action)) {
                         try {
                             action = ProjectManager.Instance.SpawnAction(projectAction, this);
-                        } catch (RequestFailedException ex) {
+                        } catch (Arcor2ConnectionException ex) {
                             Debug.LogError(ex);
                             continue;
                         }
@@ -661,7 +662,7 @@ namespace Base {
                 try {
                     await CommunicationManager.Instance.Client.UpdateActionPointPositionAsync(new UpdateActionPointPositionRequestArgs(GetId(), new Position()), true);
                     return new RequestResult(true);
-                } catch (RequestFailedException e) {
+                } catch (Arcor2ConnectionException e) {
                     return new RequestResult(false, e.Message);
                 }
 

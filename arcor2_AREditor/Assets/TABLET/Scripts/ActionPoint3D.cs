@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
 using TMPro;
@@ -207,7 +208,7 @@ public class ActionPoint3D : ActionPoint {
                 var response =
                     await CommunicationManager.Instance.Client.RemoveActionPointAsync(new IdArgs(GetId()), true);
                 return new RequestResult(response.Result, response.Messages?.FirstOrDefault() ?? string.Empty);
-            } catch (RequestFailedException ex) {
+            } catch (Arcor2ConnectionException ex) {
                 return new RequestResult(false, ex.Message);
 
             }
@@ -221,7 +222,7 @@ public class ActionPoint3D : ActionPoint {
             if (!response.Result) {
                 Notifications.Instance.ShowNotification("Failed to remove AP " + GetName(), string.Join(',', response.Messages));
             }
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to remove AP " + GetName(), ex.Message);
         }
     }
@@ -235,7 +236,7 @@ public class ActionPoint3D : ActionPoint {
                 return;
             }
             Notifications.Instance.ShowToastMessage("Action point renamed");
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             Notifications.Instance.ShowNotification("Failed to rename action point", e.Message);
         }
     }

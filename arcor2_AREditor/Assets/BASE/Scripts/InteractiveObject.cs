@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
 using UnityEngine;
@@ -148,7 +149,7 @@ public abstract class InteractiveObject : Clickable {
             }
             lockedTree = lockTree;
             return true;
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to lock " + GetName(), ex.Message);
             return false;
         }
@@ -173,7 +174,7 @@ public abstract class InteractiveObject : Clickable {
 
             IsLocked = false;
             return true;
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Debug.LogError(ex.Message);
             return false;
         }
@@ -187,7 +188,7 @@ public abstract class InteractiveObject : Clickable {
                 return false;
             }
             return true;
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Debug.LogError("failed to update lock");
             return false;
         }

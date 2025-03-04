@@ -327,7 +327,7 @@ public class ActionPointAimingMenu : RightMenu<ActionPointAimingMenu> {
                 await SceneManager.Instance.SelectedRobot.WriteUnlock();
             }
             Notifications.Instance.ShowToastMessage("Position updated successfully");
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Debug.LogError(ex);
             Notifications.Instance.ShowNotification("Update position failed", ex.Message);
         } finally {
@@ -571,7 +571,7 @@ public class ActionPointAimingMenu : RightMenu<ActionPointAimingMenu> {
             }
 
             Notifications.Instance.ShowToastMessage("Orientation added successfully");
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to add new orientation", ex.Message);
         }
     }

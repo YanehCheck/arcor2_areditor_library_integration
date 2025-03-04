@@ -558,7 +558,7 @@ public class ModelPositioningMenu : RightMenu<ModelPositioningMenu> {
             isWaiting = false;
             return;
 
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             isWaiting = false;
             ImpossiblePoseNotify(true, false);
             return;

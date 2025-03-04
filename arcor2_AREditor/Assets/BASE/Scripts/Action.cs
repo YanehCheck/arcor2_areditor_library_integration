@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Newtonsoft.Json;
 using TMPro;
@@ -262,7 +263,7 @@ namespace Base
                 Output.ifValue = null;
                 ConnectionManagerArcoro.Instance.DestroyConnectionToMouse();
             }
-            catch (RequestFailedException ex)
+            catch (Arcor2ConnectionException ex)
             {
                 Debug.LogError(ex);
                 Notifications.Instance.SaveLogs("Failed to add connection");
@@ -328,7 +329,7 @@ namespace Base
                     AddConnection();
 
                 }
-                catch (RequestFailedException ex)
+                catch (Arcor2ConnectionException ex)
                 {
                     GameManager.Instance.HideLoadingScreen();
                     Notifications.Instance.ShowNotification("Failed to remove connection", ex.Message);

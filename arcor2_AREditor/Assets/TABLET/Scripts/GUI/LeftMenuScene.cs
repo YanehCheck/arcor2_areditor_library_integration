@@ -138,7 +138,7 @@ public class LeftMenuScene : LeftMenu {
             ActionObjectAimingMenu.Instance.Highlight(true);
             DeactivateAllSubmenus();
             ConfirmationDialog.Close();
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to cancel object aiming", ex.Message);
         }
 
@@ -249,7 +249,7 @@ public class LeftMenuScene : LeftMenu {
                        name,
                        "",
                        InputDialogWithToggle.GetToggleValue()), true);
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             return new RequestResult(false, ex.Message);
         }
         return new RequestResult(true, "");
@@ -270,7 +270,7 @@ public class LeftMenuScene : LeftMenu {
             nameOfNewProject,
             "",
             InputDialogWithToggle.GetToggleValue()));
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to create new project", ex.Message);
             GameManager.Instance.HideLoadingScreen(true);
         }

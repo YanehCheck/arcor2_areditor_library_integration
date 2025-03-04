@@ -274,7 +274,7 @@ public class LeftMenuProject : LeftMenu {
             await GameManager.Instance.BuildPackage(name);
             InputDialog.Close();
             Notifications.Instance.ShowToastMessage("Package was built sucessfully.");
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
 
         }
 
@@ -293,7 +293,7 @@ public class LeftMenuProject : LeftMenu {
             }
 
             MainMenu.Instance.Close();
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to run temporary package", ex.Message);
             Debug.LogError(ex);
             GameManager.Instance.HideLoadingScreen(true);
@@ -593,7 +593,7 @@ public class LeftMenuProject : LeftMenu {
 
                 //await WebsocketManager.Instance.MoveToActionPointOrientation(SceneManager.Instance.SelectedRobot.GetId(), SceneManager.Instance.SelectedEndEffector.GetId(), 0.5m, selectedObject.GetId(), false);
             }
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to execute action", ex.Message);
             return;
         }
@@ -619,7 +619,7 @@ public class LeftMenuProject : LeftMenu {
                 Notifications.Instance.ShowNotification("Failed to debug project", string.Join(',', response.Messages));
                 GameManager.Instance.HideLoadingScreen();
             }
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to debug project", ex.Message);
             GameManager.Instance.HideLoadingScreen();
         }

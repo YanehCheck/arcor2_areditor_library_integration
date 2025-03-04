@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using ARServer.Models;
 using Newtonsoft.Json;
@@ -104,7 +105,7 @@ namespace Base {
                     }
                 default:
                     Debug.LogError($"Trying to use unsupported parameter type: {Type}");
-                    throw new RequestFailedException("Unknown type");
+                    throw new Arcor2ConnectionException("Unknown type");
 
             }
         }

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
 using UnityEngine;
@@ -33,7 +34,7 @@ public class NewProjectDialog : Dialog
             generateLogic = GenerateLogicToggle.GetComponent<Toggle>().isOn;
             await GameManager.Instance.NewProject(name, sceneId, generateLogic);
             Close();
-        } catch (Exception ex) when (ex is ItemNotFoundException || ex is RequestFailedException) { 
+        } catch (Exception ex) when (ex is ItemNotFoundException || ex is Arcor2ConnectionException) { 
             Notifications.Instance.ShowNotification("Failed to create new project", ex.Message);
         }
 
@@ -65,7 +66,7 @@ public class NewProjectDialog : Dialog
         try {
             var response = await CommunicationManager.Instance.Client.AddNewProjectAsync(new NewProjectRequestArgs(name, sceneId, "", generateLogic), true);
             return (response.Result, response.Messages?.FirstOrDefault() ?? "");
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             return (false, ex.Message);
         }
         return (true, "");

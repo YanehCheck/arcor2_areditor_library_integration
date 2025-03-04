@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
 using UnityEngine;
@@ -746,7 +747,7 @@ public class CalibrationManager : Singleton<CalibrationManager> {
                     cornerGO.transform.localScale = new Vector3(0.005f, 0.005f, 0.005f);
                 }
             }
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to get marker corners.", ex.Message);
         }
     }
@@ -796,7 +797,7 @@ public class CalibrationManager : Singleton<CalibrationManager> {
                 }
             }
 
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             markerDetectionState = MarkerDetectionState.Failure;
             if (showNotification) {
                 Notifications.Instance.ShowNotification("No markers visible", "Find some markers and try again.");

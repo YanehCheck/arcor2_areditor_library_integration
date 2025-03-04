@@ -112,7 +112,7 @@ public class RobotSteppingMenu : RightMenu<RobotSteppingMenu> {
                 SetInteractivityOfRobotBtns(true);
                 Notifications.Instance.ShowNotification("Failed to set robot perpendicular", string.Join(',', response.Messages));
             }
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             SetInteractivityOfRobotBtns(true);
             Notifications.Instance.ShowNotification("Failed to set robot perpendicular", ex.Message);
         }
@@ -183,7 +183,7 @@ public class RobotSteppingMenu : RightMenu<RobotSteppingMenu> {
             if (!response.Result) {
                 Notifications.Instance.ShowNotification("Failed to enable hand teaching mode", string.Join(',', response.Messages));
             }
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to enable hand teaching mode", ex.Message);
         }
     }
@@ -200,7 +200,7 @@ public class RobotSteppingMenu : RightMenu<RobotSteppingMenu> {
             if (!response.Result) {
                 Notifications.Instance.ShowNotification("Failed to disable hand teaching mode", string.Join(',', response.Messages));
             }
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to disable hand teaching mode", ex.Message);
         }
     }
@@ -296,7 +296,7 @@ public class RobotSteppingMenu : RightMenu<RobotSteppingMenu> {
                 Notifications.Instance.ShowNotification("Failed to move robot", string.Join(',', response.Messages));
                 SetInteractivityOfRobotBtns(true);
             }
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to move robot", ex.Message);
             SetInteractivityOfRobotBtns(true);
         }

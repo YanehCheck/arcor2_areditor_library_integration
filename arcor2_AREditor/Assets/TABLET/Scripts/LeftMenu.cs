@@ -658,7 +658,7 @@ public abstract class LeftMenu : MonoBehaviour {
                     GameManager.Instance.ShowLoadingScreen("Checking hierarchy...");
                     await CommunicationManager.Instance.Client.UpdateActionPointParentAsync(new UpdateActionPointParentRequestArgs(selectedActionPoint.GetId(), parent.GetId()), true);
                     GameManager.Instance.HideLoadingScreen();
-                } catch (RequestFailedException ex) {
+                } catch (Arcor2ConnectionException ex) {
                     result.Success = false;
                     result.Message = ex.Message;
                 }

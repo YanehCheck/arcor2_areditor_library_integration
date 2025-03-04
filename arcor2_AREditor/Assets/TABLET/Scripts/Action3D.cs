@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
 using Newtonsoft.Json;
@@ -157,7 +158,7 @@ public class Action3D : Action, ISubItem {
                 }
 
                 return new RequestResult(true);
-            } catch (RequestFailedException ex) {
+            } catch (Arcor2ConnectionException ex) {
                 return new RequestResult(false, ex.Message);
             }
         }
@@ -169,7 +170,7 @@ public class Action3D : Action, ISubItem {
             if (!response.Result) {
                 Notifications.Instance.ShowNotification("Failed to remove action " + GetName(), string.Join(',', response.Messages));
             }
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to remove action " + GetName(), ex.Message);
         }
     }
@@ -182,7 +183,7 @@ public class Action3D : Action, ISubItem {
                 return;
             }
             Notifications.Instance.ShowToastMessage("Action renamed");
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             Notifications.Instance.ShowNotification("Failed to rename action", e.Message);
             throw;
         }

@@ -193,7 +193,7 @@ public class OrientationJointsDetailMenu : MonoBehaviour, IMenu {
                 return;
             }
             Notifications.Instance.ShowToastMessage("Joints updated successfully");
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Joints update failed", ex.Message);
             return;
         } catch (Exception ex) { //decimal parsing exceptions
@@ -210,7 +210,7 @@ public class OrientationJointsDetailMenu : MonoBehaviour, IMenu {
                 return;
             }
             Notifications.Instance.ShowToastMessage("Orientation updated successfully");
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to update orientation", ex.Message);
         }
     }
@@ -234,7 +234,7 @@ public class OrientationJointsDetailMenu : MonoBehaviour, IMenu {
             } catch (ItemNotFoundException ex) {
                 Debug.LogError(ex);
                 Notifications.Instance.ShowNotification("Failed update orientation", ex.Message);
-            } catch (RequestFailedException ex) {
+            } catch (Arcor2ConnectionException ex) {
                 Notifications.Instance.ShowNotification("Failed to update orientation", ex.Message);
             }
         } else //joints
@@ -247,7 +247,7 @@ public class OrientationJointsDetailMenu : MonoBehaviour, IMenu {
                     return;
                 }
                 Notifications.Instance.ShowToastMessage("Joints updated successfully");
-            } catch (RequestFailedException ex) {
+            } catch (Arcor2ConnectionException ex) {
                 Notifications.Instance.ShowNotification("Failed to update joints", ex.Message);
             }
         }
@@ -278,7 +278,7 @@ public class OrientationJointsDetailMenu : MonoBehaviour, IMenu {
             ConfirmationDialog.Close();
             HideMenu();
 
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             Notifications.Instance.ShowNotification("Failed delete orientation/joints", e.Message);
         }
     }
@@ -334,7 +334,7 @@ public class OrientationJointsDetailMenu : MonoBehaviour, IMenu {
                 }
                 Notifications.Instance.ShowToastMessage("Joints renamed successfully");
             }
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to rename orientation/joints", ex.Message);
             UpdateMenu();
         }
@@ -372,7 +372,7 @@ public class OrientationJointsDetailMenu : MonoBehaviour, IMenu {
             }
         } catch (ItemNotFoundException ex) {
             Notifications.Instance.ShowNotification("Failed to move robot", ex.Message);
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to move robot", ex.Message);
         }
     }
@@ -404,7 +404,7 @@ public class OrientationJointsDetailMenu : MonoBehaviour, IMenu {
             } catch (ItemNotFoundException ex) {
                 Notifications.Instance.ShowNotification("Unable to move here model", ex.Message);
                 return;
-            } catch (RequestFailedException ex) {
+            } catch (Arcor2ConnectionException ex) {
                 if (avoid_collision) //if this is first call, try it again without avoiding collisions
                     MoveHereModel(false);
                 else

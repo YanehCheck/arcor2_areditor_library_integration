@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
 using UnityEngine;
@@ -49,7 +50,7 @@ public class ProjectOptionMenu : TileOptionMenu
                 return (false, response.Messages.FirstOrDefault());
             }
             return (true, "");
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             return (false, e.Message);
         }
     }
@@ -67,7 +68,7 @@ public class ProjectOptionMenu : TileOptionMenu
             projectTile.SetLabel(newUserId);
             SetLabel(newUserId);
             Close();
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             Notifications.Instance.ShowNotification("Failed to rename project", e.Message);
         } finally {
             GameManager.Instance.HideLoadingScreen();
@@ -92,7 +93,7 @@ public class ProjectOptionMenu : TileOptionMenu
             }
             confirmationDialog.Close();
             Close();
-        } catch (RequestFailedException e) {
+        } catch (Arcor2ConnectionException e) {
             Notifications.Instance.ShowNotification("Failed to remove project", e.Message);
         } finally {
             GameManager.Instance.HideLoadingScreen();
@@ -129,7 +130,7 @@ public class ProjectOptionMenu : TileOptionMenu
             }
             Close();
             MainScreen.Instance.SwitchToProjects();
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to duplicate project", ex.Message);
         } finally {
             GameManager.Instance.HideLoadingScreen();

@@ -1,3 +1,4 @@
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
 using Michsky.UI.ModernUIPack;
@@ -62,7 +63,7 @@ public class AddJointsMenu : MonoBehaviour {
             }
 
             Notifications.Instance.ShowToastMessage("Joints added successfully");
-        } catch (RequestFailedException ex) {
+        } catch (Arcor2ConnectionException ex) {
             Notifications.Instance.ShowNotification("Failed to add joints", ex.Message);
             return;
         }

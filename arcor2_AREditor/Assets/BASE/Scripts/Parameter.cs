@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication;
 using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using ARServer.Models;
 using Michsky.UI.ModernUIPack;
@@ -99,7 +100,7 @@ namespace Base {
                 case ParameterMetadata.BOOL:
                     return JsonConvert.SerializeObject(bool.Parse(value));
             }
-            throw new RequestFailedException("Unknown parameter type (" + type + ")");
+            throw new Arcor2ConnectionException("Unknown parameter type (" + type + ")");
         }
 
         public string GetStringValue() {
@@ -124,7 +125,7 @@ namespace Base {
                 case ParameterMetadata.BOOL:
                     return GetValue<bool>(value).ToString();
             }
-            throw new RequestFailedException("Unknown parameter type");
+            throw new Arcor2ConnectionException("Unknown parameter type");
         }
 
         public void SetValue(object newValue) {
@@ -508,7 +509,7 @@ namespace Base {
                         try {
                             await LoadDropdownValues(actionProviderId, null, tuple.Item1, tuple.Item2, handler, parentObject,
                                 async () => await LoadDropdownValues(actionProviderId, null, tuple.Item1, tuple.Item2, handler, parentObject));
-                        } catch (Exception ex) when (ex is ItemNotFoundException || ex is RequestFailedException) {
+                        } catch (Exception ex) when (ex is ItemNotFoundException || ex is Arcor2ConnectionException) {
                             Debug.LogError(ex);
                         } finally {
                             dynamicDropdowns.RemoveAt(i);
@@ -551,7 +552,7 @@ namespace Base {
 
                             await LoadDropdownValues(actionProviderId, tuple.Item2.GetValue<string>(), tuple.Item1, tuple.Item2.ParameterMetadata, handler, parentObject,
                                 async () => await LoadDropdownValues(actionProviderId, tuple.Item2.GetValue<string>(), tuple.Item1, tuple.Item2.ParameterMetadata, handler, parentObject));
-                        } catch (Exception ex) when (ex is ItemNotFoundException || ex is RequestFailedException) {
+                        } catch (Exception ex) when (ex is ItemNotFoundException || ex is Arcor2ConnectionException) {
                             Debug.LogError(ex);
                         } finally {
                             dynamicDropdowns.RemoveAt(i);
