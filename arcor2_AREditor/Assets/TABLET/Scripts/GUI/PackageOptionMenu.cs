@@ -1,7 +1,9 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
 using UnityEngine;
-
 
 public class PackageOptionMenu : TileOptionMenu {
 
@@ -31,8 +33,12 @@ public class PackageOptionMenu : TileOptionMenu {
     public async void RemovePackage() {
         GameManager.Instance.ShowLoadingScreen();
         try {
-            await WebsocketManager.Instance.RemovePackage(packageTile.PackageId);
-            WebsocketManager.Instance.LoadPackages(MainScreen.Instance.LoadPackagesCb);
+            var response = await CommunicationManager.Instance.Client.RemovePackageAsync(new IdArgs(packageTile.PackageId));
+            if (!response.Result) {
+                Notifications.Instance.ShowNotification("Failed to remove package", string.Join(',', response.Messages));
+                return;
+            }
+            CommunicationManager.Instance.Client.ListPackagesAsync().ContinueWith(task => MainScreen.Instance.LoadPackages(task.Result), TaskScheduler.FromCurrentSynchronizationContext());
             confirmationDialog.Close();
             Close();
         } catch (RequestFailedException e) {
@@ -45,7 +51,7 @@ public class PackageOptionMenu : TileOptionMenu {
 
     public async void ChangeImage() {
         GameManager.Instance.ShowLoadingScreen();
-        System.Tuple<Sprite, string> image = await ImageHelper.LoadSpriteAndSaveToDb();
+        Tuple<Sprite, string> image = await ImageHelper.LoadSpriteAndSaveToDb();
         if (image != null) {
             PlayerPrefsHelper.SaveString(packageTile.PackageId + "/image", image.Item2);
             packageTile.TopImage.sprite = image.Item1;
@@ -67,7 +73,11 @@ public class PackageOptionMenu : TileOptionMenu {
 
     public async Task<RequestResult> ValidateProjectName(string newName) {
         try {
-            await WebsocketManager.Instance.RenamePackage(packageTile.PackageId, newName, true);
+            var response = await CommunicationManager.Instance.Client.RenamePackageAsync(new RenamePackageRequestArgs(packageTile.PackageId, newName));
+            if (!response.Result) {
+                Notifications.Instance.ShowNotification("Failed to rename package", string.Join(',', response.Messages));
+                return (false, response.Messages.FirstOrDefault());
+            }
             return (true, "");
         } catch (RequestFailedException e) {
             return (false, e.Message);
@@ -75,9 +85,13 @@ public class PackageOptionMenu : TileOptionMenu {
     }
 
     public async void RenamePackage(string newUserId) {
-        Base.GameManager.Instance.ShowLoadingScreen();
+        GameManager.Instance.ShowLoadingScreen();
         try {
-            await WebsocketManager.Instance.RenamePackage(packageTile.PackageId, newUserId, false);
+            var response = await CommunicationManager.Instance.Client.RenamePackageAsync(new RenamePackageRequestArgs(packageTile.PackageId, newUserId));
+            if (!response.Result) {
+                Notifications.Instance.ShowNotification("Failed to rename package", string.Join(',', response.Messages));
+                return;
+            }
             inputDialog.Close();
             packageTile.SetLabel(newUserId);
             SetLabel(newUserId);
@@ -85,7 +99,7 @@ public class PackageOptionMenu : TileOptionMenu {
         } catch (RequestFailedException e) {
             Notifications.Instance.ShowNotification("Failed to rename package", e.Message);
         } finally {
-            Base.GameManager.Instance.HideLoadingScreen();
+            GameManager.Instance.HideLoadingScreen();
         }
     }
 

@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
+using System.Collections.Generic;
+using Arcor2.ClientSdk.Communication;
 
 namespace Base {
-    public class RequestFailedException : Exception {
+    public class RequestFailedException : Arcor2ConnectionException {
         public RequestFailedException() : base() { }
         public RequestFailedException(string message) : base(message) { }
         public RequestFailedException(List<string> messages) : base(messages.Count > 0 ? messages[0] : "") { }

@@ -1,9 +1,10 @@
-using System;
+using Arcor2.ClientSdk.Communication.OpenApi.Models;
+using Base;
 using Newtonsoft.Json;
 
 public static class ProjectParameterHelper
 {
-    public static object GetValue(IO.Swagger.Model.ProjectParameter parameter) {
+    public static object GetValue(ProjectParameter parameter) {
         switch (parameter.Type) {
            case "integer":
                 return JsonConvert.DeserializeObject<int>(parameter.Value);
@@ -14,7 +15,7 @@ public static class ProjectParameterHelper
             case "boolean":
                 return JsonConvert.DeserializeObject<bool>(parameter.Value);
             default:
-                throw new Base.RequestFailedException($"Unsupported parameter type {parameter.Type}");
+                throw new RequestFailedException($"Unsupported parameter type {parameter.Type}");
         }
     }
 }

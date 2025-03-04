@@ -1,7 +1,9 @@
-using UnityEngine;
 using System;
-using Base;
+using System.Linq;
 using System.Threading.Tasks;
+using Arcor2.ClientSdk.Communication.OpenApi.Models;
+using Base;
+using UnityEngine;
 
 public class SceneOptionMenu : TileOptionMenu {
 
@@ -48,7 +50,10 @@ public class SceneOptionMenu : TileOptionMenu {
 
     public async Task<RequestResult> ValidateSceneNameAsync(string newName) {
         try {
-            await WebsocketManager.Instance.RenameScene(sceneTile.SceneId, newName, true);
+            var response = await CommunicationManager.Instance.Client.RenameSceneAsync(new RenameArgs(sceneTile.SceneId, newName), true);
+            if (!response.Result) {
+                return (false, response.Messages.FirstOrDefault());
+            }
             return (true, "");
         } catch (RequestFailedException e) {
             return (false, e.Message);
@@ -56,9 +61,13 @@ public class SceneOptionMenu : TileOptionMenu {
     }
 
     public async void RenameScene(string newUserId) {
-        Base.GameManager.Instance.ShowLoadingScreen();
+        GameManager.Instance.ShowLoadingScreen();
         try {
-            await WebsocketManager.Instance.RenameScene(sceneTile.SceneId, newUserId, false);
+            var response = await CommunicationManager.Instance.Client.RenameSceneAsync(new RenameArgs(sceneTile.SceneId, newUserId), false);
+            if (!response.Result) {
+                Notifications.Instance.ShowNotification("Failed to rename scene", string.Join(',', response.Messages));
+                return;
+            }
             inputDialog.Close();
             sceneTile.SetLabel(newUserId);
             SetLabel(newUserId);
@@ -66,7 +75,7 @@ public class SceneOptionMenu : TileOptionMenu {
         } catch (RequestFailedException e) {
             Notifications.Instance.ShowNotification("Failed to rename scene", e.Message);
         } finally {
-            Base.GameManager.Instance.HideLoadingScreen();
+            GameManager.Instance.HideLoadingScreen();
         }
     }
 
@@ -74,16 +83,22 @@ public class SceneOptionMenu : TileOptionMenu {
     public async void ShowRemoveDialog() {
         int projects;
         try {
-            projects = (await WebsocketManager.Instance.GetProjectsWithScene(sceneTile.SceneId)).Count;
+            var response = await CommunicationManager.Instance.Client.GetProjectsWithSceneAsync(new IdArgs(sceneTile.SceneId));
+            if (!response.Result) {
+                Debug.LogError(string.Join(',', response.Messages));
+                return;
+            }
+
+            projects = response.Data.Count;
         } catch (RequestFailedException e) {
             Debug.LogError(e);
             return;
         }
         if (projects == 1) {
-            Base.Notifications.Instance.ShowNotification("Failed to remove scene", "There is one project associated with this scene. Remove it first.");
+            Notifications.Instance.ShowNotification("Failed to remove scene", "There is one project associated with this scene. Remove it first.");
             return;
         } else if (projects > 1) {
-            Base.Notifications.Instance.ShowNotification("Failed to remove scene", "There are " + projects + " projects associated with this scene. Remove them first.");
+            Notifications.Instance.ShowNotification("Failed to remove scene", "There are " + projects + " projects associated with this scene. Remove them first.");
             return;
         }
         ConfirmationDialog.Open("Remove scene",
@@ -93,15 +108,20 @@ public class SceneOptionMenu : TileOptionMenu {
     }
 
     public async void RemoveScene() {
-        Base.GameManager.Instance.ShowLoadingScreen();
+        GameManager.Instance.ShowLoadingScreen();
         try {
-            await WebsocketManager.Instance.RemoveScene(sceneTile.SceneId);
+            var response =
+                await CommunicationManager.Instance.Client.RemoveSceneAsync(new IdArgs(sceneTile.SceneId));
+            if (!response.Result) {
+                Notifications.Instance.ShowNotification("Failed to remove scene", string.Join(',', response.Messages));
+                return;
+            }
             ConfirmationDialog.Close();
             Close();
         } catch (RequestFailedException e) {
             Notifications.Instance.ShowNotification("Failed to remove scene", e.Message);
         } finally {
-            Base.GameManager.Instance.HideLoadingScreen();
+            GameManager.Instance.HideLoadingScreen();
         }
     }
 
@@ -130,7 +150,12 @@ public class SceneOptionMenu : TileOptionMenu {
         try {
             string name = SceneManager.Instance.GetFreeSceneName($"{sceneTile.GetLabel()}_copy");
             GameManager.Instance.ShowLoadingScreen($"Creating {name} project...");
-            await WebsocketManager.Instance.DuplicateScene(sceneTile.SceneId, name);
+            var response = await CommunicationManager.Instance.Client.DuplicateSceneAsync(new CopySceneRequestArgs(sceneTile.SceneId, name));
+            if (!response.Result) {
+                Notifications.Instance.ShowNotification("Failed to duplicate scenne",
+                    string.Join(',', response.Messages));
+                return;
+            }
             Close();
             MainScreen.Instance.SwitchToScenes();
         } catch (RequestFailedException ex) {

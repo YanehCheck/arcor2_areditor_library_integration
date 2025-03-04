@@ -1,6 +1,6 @@
 using System;
+using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
-using IO.Swagger.Model;
 using UnityEngine;
 
 public class ActionObjectNoPose : ActionObject {

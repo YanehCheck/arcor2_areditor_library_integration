@@ -1,13 +1,15 @@
+using Arcor2.ClientSdk.Communication.OpenApi.Models;
 using Base;
-using IO.Swagger.Model;
 using Michsky.UI.ModernUIPack;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using ActionPoint = Base.ActionPoint;
 
 public class AddOrientationMenu : MonoBehaviour {
-    public Base.ActionPoint CurrentActionPoint;
+    public ActionPoint CurrentActionPoint;
 
-    public TMPro.TMP_InputField NameInput;// QuaternionX, QuaternionY, QuaternionZ, QuaternionW;
+    public TMP_InputField NameInput;// QuaternionX, QuaternionY, QuaternionZ, QuaternionW;
     public GameObject ManualModeBlock;
     public bool ManualMode;
 
@@ -65,13 +67,21 @@ public class AddOrientationMenu : MonoBehaviour {
 
             if (ManualMode) {
                 Orientation orientation = OrientationManualEdit.GetOrientation();
-                await WebsocketManager.Instance.AddActionPointOrientation(CurrentActionPoint.Data.Id, orientation, name);
+                var response = await CommunicationManager.Instance.Client.AddActionPointOrientationAsync(new AddActionPointOrientationRequestArgs(CurrentActionPoint.Data.Id, orientation, name));
+                if (!response.Result) {
+                    Notifications.Instance.ShowNotification("Failed to add new orientation", string.Join(',', response.Messages));
+                    return;
+                }
             } else { //using robot
 
                 string armId = null;
                 if (SceneManager.Instance.SelectedRobot.MultiArm())
                     armId = SceneManager.Instance.SelectedArmId;
-                await WebsocketManager.Instance.AddActionPointOrientationUsingRobot(CurrentActionPoint.Data.Id, SceneManager.Instance.SelectedRobot.GetId(), SceneManager.Instance.SelectedEndEffector.GetName(), name, armId);
+                var response = await CommunicationManager.Instance.Client.AddActionPointOrientationUsingRobotAsync(new AddActionPointOrientationUsingRobotRequestArgs(CurrentActionPoint.Data.Id, new RobotArg(SceneManager.Instance.SelectedRobot.GetId(), SceneManager.Instance.SelectedEndEffector.GetName(), armId), name));
+                if (!response.Result) {
+                    Notifications.Instance.ShowNotification("Failed to add new orientation", string.Join(',', response.Messages));
+                    return;
+                }
             }
             Close(); //close add menu
             Notifications.Instance.ShowToastMessage("Orientation added successfully");
@@ -82,7 +92,7 @@ public class AddOrientationMenu : MonoBehaviour {
         }
     }
 
-    public void ShowMenu(Base.ActionPoint actionPoint, bool manualMode) {
+    public void ShowMenu(ActionPoint actionPoint, bool manualMode) {
         ManualMode = manualMode;
         CurrentActionPoint = actionPoint;
 
